@@ -1,0 +1,5 @@
+# ☕ Café Focus
+
+Café Focus is a serverless productivity web app that turns focus sessions into an immersive café experience. Instead of a traditional timer, users “order” a drink that represents a focused work session, complete with duration, task input, and ambient café environments designed to improve concentration and reduce friction when starting deep work.
+
+This project is being built using a fully serverless AWS architecture with React on the frontend and Terraform/Terragrunt managing infrastructure.
