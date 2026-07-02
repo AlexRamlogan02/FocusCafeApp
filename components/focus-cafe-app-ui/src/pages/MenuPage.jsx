@@ -34,9 +34,7 @@ export default function MenuPage() {
 
             {selectedItem && (<SessionSettings
                 item={selectedItem}
-                onChangeFocus={(newFocus) => console.log('New focus duration:', newFocus)}
-                onSelectBreak={(newBreak) => console.log('New break duration:', newBreak)}
-                onSelectSessions={(newSessions) => console.log('New number of sessions:', newSessions)} />)
+                />)
             }
 
             <div className="grid gap-6 md:grid-cols-2">
