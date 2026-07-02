@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { api } from '../api'
 import Dropdown from './Dropdown.component.jsx'
+import TimerSettings from './TimerSettings.component.jsx'
 
 const getPresetDurations = (preset) => {
     switch (preset) {
@@ -29,6 +30,7 @@ export default function Timer({
     const [phase, setPhase] = useState('focus')
     const [isRunning, setIsRunning] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
     useEffect(() => {
         let mounted = true
@@ -97,7 +99,16 @@ export default function Timer({
     }
 
     return (
-        <div className="mx-auto max-w-2xl rounded-3xl border border-[color:var(--secondary)]/20 bg-white p-8 text-center shadow-lg backdrop-blur dark:bg-slate-900/50">
+        <div className="relative mx-auto max-w-2xl rounded-3xl border border-[color:var(--secondary)]/20 bg-white p-8 text-center shadow-lg backdrop-blur dark:bg-slate-900/50">
+           
+            {isSettingsOpen && (
+                <TimerSettings onCloseSettings={() => setIsSettingsOpen(false)} />
+            )}
+            <button className="absolute right-6 top-6 rounded-full border border-[color:var(--secondary)]/30 bg-white/80 px-4 py-2 text-sm font-semibold text-[var(--text-color)] transition hover:bg-[var(--secondary)]/10 dark:bg-slate-900/80"
+                onClick={() => setIsSettingsOpen(true)}
+            >
+                {isSettingsOpen ? 'Close Settings' : 'Open Settings'}
+            </button>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--secondary)]">
                 {phase === 'break' ? 'Break' : 'Focus'} session
             </p>
@@ -123,5 +134,6 @@ export default function Timer({
                 )}
             </div>
         </div>
+
     )
 }
