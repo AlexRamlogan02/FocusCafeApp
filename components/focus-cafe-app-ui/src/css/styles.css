@@ -1,0 +1,31 @@
+:root{
+    --primary: #CDD6A1;
+    --secondary: #829055;
+    --milk: #FBF2E3;
+    --text-color: var(--secondary);
+}
+
+:root.dark{
+    --primary: #623528;
+    --secondary: #d9a883;
+    --milk: #FBF2E3;
+    --text-color: var(--secondary);
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--primary);
+    color: var(--text-color);
+}
+
+#root {
+    width: 100%;
+    min-height: 100vh;
+}

@@ -7,12 +7,23 @@ export const sessions = [
             {
                 priority: 1, //low, med, high
                 desc: "Create Framework"
-            } ,
+            },
             {
                 priority: 2, //low, med, high
                 desc: "Draft API Layer"
             }
         ]
+    }
+]
+
+export const menuItems = [
+    {
+        item: 'Lemonade',
+        assetLink: 'assets/menu/lemonade'
+    },
+    {
+        item: 'Matcha',
+        assetLink: 'assets/menu/matcha'
     }
 ]
 

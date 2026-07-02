@@ -1,0 +1,28 @@
+.header {
+    background-color: var(--secondary);
+    color: var(--milk);
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.header__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1126px;
+    margin: 0 auto;
+    gap: 1.5rem;
+}
+
+.header__logo {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.custom-switch {
+    margin-left: auto;
+}
