@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { FaPlus, FaMinus } from "react-icons/fa6";
 
 const IncDec = ({
   label = '',
@@ -82,9 +83,9 @@ const IncDec = ({
           type="button"
           onClick={handleDecrease}
           disabled={Number(value) <= min}
-          className="h-9 w-9 rounded-full border border-[color:var(--secondary)]/20 text-lg font-semibold text-[var(--text-color)] transition hover:bg-[var(--secondary)]/10 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-sm font-semibold text-[var(--text-color)] transition hover:bg-[var(--secondary)]/10 dark:bg-slate-900/80"
         >
-          -
+          <FaMinus className="h-4 w-4" />
         </button>
         <input
           type="number"
@@ -98,9 +99,9 @@ const IncDec = ({
         <button
           type="button"
           onClick={handleIncrease}
-          className="h-9 w-9 rounded-full border border-[color:var(--secondary)]/20 text-lg font-semibold text-[var(--text-color)] transition hover:bg-[var(--secondary)]/10"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-sm font-semibold text-[var(--text-color)] transition hover:bg-[var(--secondary)]/10 dark:bg-slate-900/80"
         >
-          +
+          <FaPlus className="h-4 w-4" />
         </button>
       </div>
     </div>

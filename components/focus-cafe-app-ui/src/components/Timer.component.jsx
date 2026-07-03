@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { api } from '../api'
 import Dropdown from './Dropdown.component.jsx'
 import TimerSettings from './TimerSettings.component.jsx'
+import { FaGear, FaPlay, FaPause } from "react-icons/fa6";
+import { VscDebugRestart } from "react-icons/vsc";
+
 
 const getPresetDurations = (preset) => {
     switch (preset) {
@@ -107,7 +110,8 @@ export default function Timer({
             <button className="absolute right-6 top-6 rounded-full border border-[color:var(--secondary)]/30 bg-white/80 px-4 py-2 text-sm font-semibold text-[var(--text-color)] transition hover:bg-[var(--secondary)]/10 dark:bg-slate-900/80"
                 onClick={() => setIsSettingsOpen(true)}
             >
-                {isSettingsOpen ? 'Close Settings' : 'Open Settings'}
+                <FaGear className="h-4 w-4" />
+                
             </button>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--secondary)]">
                 {phase === 'break' ? 'Break' : 'Focus'} session
@@ -121,15 +125,15 @@ export default function Timer({
                     onClick={handleStartPause}
                     className="rounded-full bg-[var(--secondary)] px-5 py-2.5 text-sm font-semibold text-[var(--milk)] transition hover:opacity-90"
                 >
-                    {isRunning ? 'Pause' : 'Start'}
+                    {isRunning ? <FaPause className="h-4 w-4" /> : <FaPlay className="h-4 w-4" />}
                 </button>
                 {!isRunning && (
                     <button
                         type="button"
                         onClick={handleReset}
-                        className="rounded-full border border-[color:var(--secondary)]/30 px-5 py-2.5 text-sm font-semibold text-[var(--text-color)] transition hover:bg-[var(--secondary)]/10"
+                        className="rounded-full bg-[var(--secondary)] px-5 py-2.5 text-sm font-semibold text-[var(--milk)] transition hover:opacity-90"
                     >
-                        Reset
+                       <VscDebugRestart className="h-4 w-4" />
                     </button>
                 )}
             </div>

@@ -1,3 +1,6 @@
+import { MdClose } from "react-icons/md";
+import React, { useState } from "react";
+
 export default function TimerSettings(
     { 
         onCloseSettings,
@@ -8,10 +11,10 @@ export default function TimerSettings(
             <div className="relative rounded-2xl border border-[color:var(--secondary)] bg-white p-6 dark:bg-white-900/20">
                 <div className="absolute right-4 top-4 flex items-center gap-2">
                     <button
-                        className="rounded-full border border-[color:var(--secondary)]/30 bg-[var(--secondary)] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[var(--secondary-dark)]"
+                        className="rounded-full border border-[color:var(--secondary)]/30 bg-white/80 px-4 py-2 text-sm font-semibold text-[var(--text-color)] transition hover:bg-[var(--secondary)]/10 dark:bg-slate-900/80"
                         onClick={onCloseSettings}
                     >
-                        X
+                        <MdClose className="h-4 w-4" />
                     </button>
                 </div>
                 <h2 className="mb-4 text-xl font-semibold text-[var(--text-color)]">Timer Settings</h2>
