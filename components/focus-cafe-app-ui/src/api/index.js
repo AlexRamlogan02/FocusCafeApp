@@ -7,7 +7,12 @@ const realApiFallback = {
   startSession: async () => {
     throw new Error(
       "realApi is not implemented. Run with VITE_USE_MOCKS=true for local mocks."
-    );
+    )
+  },
+  saveSession: async () => {
+    throw new Error(
+      "realApi is not implemented. Run with VITE_USE_MOCKS=true for local mocks."
+    )
   },
 };
 

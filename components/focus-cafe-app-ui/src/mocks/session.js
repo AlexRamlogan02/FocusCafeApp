@@ -1,16 +1,13 @@
 export const sessions = [
     {
-        drink: "Matcha",
-        custom: null,
-        preset: 1, //25 min focus, 5 min break,
         taskList: [
             {
-                priority: 1, //low, med, high
-                desc: "Create Framework"
+                desc: "Create Framework",
+                status: "notStarted"
             },
             {
-                priority: 2, //low, med, high
-                desc: "Draft API Layer"
+                desc: "Draft API Layer",
+                status: "notStarted"
             }
         ]
     }

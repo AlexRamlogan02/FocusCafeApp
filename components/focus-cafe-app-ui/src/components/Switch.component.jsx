@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './css/Switch.css';
 
 const Switch = ({ 
   isOn = false, 

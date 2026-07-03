@@ -24,7 +24,7 @@ export default function FocusPage({
 
     return (
         <div className="space-y-8">
-            <section className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+            <section className="space-y-8">
                 <div className="rounded-3xl border border-[color:var(--secondary)]/20 bg-white p-6 shadow-lg dark:bg-slate-900/50">
                     <Timer
                         item={resolvedItem}
