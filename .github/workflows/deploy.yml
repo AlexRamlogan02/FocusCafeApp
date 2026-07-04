@@ -56,8 +56,33 @@ jobs:
           aws-region: ${{ inputs.aws_region }}
 
       - run: terraform init
-      - run: terraform plan -var="environment=${{ inputs.environment }}" -var="project_name=${{ inputs.project_name }}" -var="aws_region=${{ inputs.aws_region }}" ${{ inputs.terraform_extra_vars }}
-      - run: terraform apply -auto-approve -var="environment=${{ inputs.environment }}" -var="project_name=${{ inputs.project_name }}" -var="aws_region=${{ inputs.aws_region }}" ${{ inputs.terraform_extra_vars }}
+      - name: Terraform plan
+        run: |
+          EXTRA_VARS='${{ inputs.terraform_extra_vars }}'
+
+          if [[ "${{ inputs.tf_module_paths }}" == *"focus-cafe-app-hosting"* ]] && [[ -n "${{ secrets.AWS_ACCOUNT_ID }}" ]]; then
+            EXTRA_VARS="$EXTRA_VARS -var=aws_account_id=${{ secrets.AWS_ACCOUNT_ID }}"
+          fi
+
+          terraform plan \
+            -var="environment=${{ inputs.environment }}" \
+            -var="project_name=${{ inputs.project_name }}" \
+            -var="aws_region=${{ inputs.aws_region }}" \
+            $EXTRA_VARS
+
+      - name: Terraform apply
+        run: |
+          EXTRA_VARS='${{ inputs.terraform_extra_vars }}'
+
+          if [[ "${{ inputs.tf_module_paths }}" == *"focus-cafe-app-hosting"* ]] && [[ -n "${{ secrets.AWS_ACCOUNT_ID }}" ]]; then
+            EXTRA_VARS="$EXTRA_VARS -var=aws_account_id=${{ secrets.AWS_ACCOUNT_ID }}"
+          fi
+
+          terraform apply -auto-approve \
+            -var="environment=${{ inputs.environment }}" \
+            -var="project_name=${{ inputs.project_name }}" \
+            -var="aws_region=${{ inputs.aws_region }}" \
+            $EXTRA_VARS
 
   deploy_ui:
     name: Deploy UI to ${{ inputs.environment }}
