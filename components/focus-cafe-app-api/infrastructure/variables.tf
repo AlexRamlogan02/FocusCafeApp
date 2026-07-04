@@ -13,3 +13,15 @@ variable "aws_region" {
   type        = string
   default     = "us-east-1"
 }
+
+variable "cors_allowed_origin" {
+  description = "Allowed CORS origin"
+  type        = string
+  default     = "*"
+}
+
+variable "dynamodb_table_name" {
+  description = "Optional override for DynamoDB table name"
+  type        = string
+  default     = ""
+}

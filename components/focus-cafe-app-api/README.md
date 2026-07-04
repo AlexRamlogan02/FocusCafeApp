@@ -1,33 +1,30 @@
 # Focus Cafe App API
 
-This package contains the initial serverless REST API implementation and infrastructure scaffolding for Focus Cafe App.
+This package contains the serverless REST API implementation and infrastructure scaffolding for Focus Cafe App.
 
-## Endpoints
+## Runtime structure
+
+- `lambdas/<endpoint-name>/<handlerFile>.js`: one folder per endpoint Lambda handler
+- `layer/nodejs/utils/*`: shared Lambda layer utilities
+- `infrastructure/api/*.openapi.yml.tftpl`: domain OpenAPI templates (source of truth)
+- `infrastructure/modules/lambda_function`: reusable Lambda deploy module
+- `infrastructure/modules/lambda`: reusable per-endpoint IAM module
+
+## Current deployment model
+
+- OpenAPI templates are rendered and merged in Terraform
+- API Gateway REST API is created from the rendered OpenAPI body
+- Each endpoint integrates with its own Lambda function
+- Users endpoints are Cognito-authorized; auth and app-data are public
+- API Gateway stage has access logs and method-level metrics/logging enabled
+
+## Current endpoint contracts
 
 - POST /auth/register
 - POST /auth/login
-- GET /users/me
-- PUT /users/me
-- GET /users/me/streaks
-- POST /users/me/streaks
-- GET /users/me/history
+- GET /users/{userId}
+- PUT /users/{userId}
+- GET /users/{userId}/streaks
+- POST /users/{userId}/streaks
+- GET /users/{userId}/history
 - GET /app-data
-
-## Infrastructure
-
-The API infrastructure is organized under the infrastructure directory and includes:
-
-- API Gateway
-- Lambda function
-- Cognito User Pool
-- CloudWatch logging
-- Terragrunt entrypoint for dev
-
-## Missing inputs before deployment
-
-Please provide the following if you want me to complete the deployment wiring:
-
-- AWS account ID
-- AWS region (default: us-east-1)
-- GitHub repository owner/name
-- Optional: custom domain name for the API

@@ -7,3 +7,8 @@ variable "environment" {
   description = "Deployment environment"
   type        = string
 }
+
+variable "source_dir" {
+  description = "Directory containing Lambda layer source"
+  type        = string
+}

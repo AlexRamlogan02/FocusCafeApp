@@ -1,0 +1,88 @@
+paths:
+  /auth/register:
+    options:
+      summary: CORS preflight for register
+      responses:
+        "200":
+          description: CORS response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+              method.response.header.Access-Control-Allow-Origin: "'${cors_allowed_origin}'"
+        passthroughBehavior: when_no_match
+    post:
+      summary: Register user
+      operationId: authRegister
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      x-amazon-apigateway-request-validator: all
+      responses:
+        "200":
+          description: Registered
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${auth_register_invoke_arn}"
+
+  /auth/login:
+    options:
+      summary: CORS preflight for login
+      responses:
+        "200":
+          description: CORS response
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+              method.response.header.Access-Control-Allow-Origin: "'${cors_allowed_origin}'"
+        passthroughBehavior: when_no_match
+    post:
+      summary: Login user
+      operationId: authLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      x-amazon-apigateway-request-validator: all
+      responses:
+        "200":
+          description: Logged in
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${auth_login_invoke_arn}"

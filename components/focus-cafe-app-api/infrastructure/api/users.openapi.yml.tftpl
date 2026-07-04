@@ -1,0 +1,149 @@
+paths:
+  /users/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    options:
+      responses:
+        "200":
+          description: CORS response
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET,PUT'"
+              method.response.header.Access-Control-Allow-Origin: "'${cors_allowed_origin}'"
+        passthroughBehavior: when_no_match
+    get:
+      summary: Get user
+      operationId: usersGet
+      security:
+        - CognitoAuthorizer: []
+      x-amazon-apigateway-request-validator: all
+      responses:
+        "200":
+          description: User profile
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${users_get_invoke_arn}"
+    put:
+      summary: Update user
+      operationId: usersPut
+      security:
+        - CognitoAuthorizer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      x-amazon-apigateway-request-validator: all
+      responses:
+        "200":
+          description: Updated user
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${users_put_invoke_arn}"
+
+  /users/{userId}/streaks:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    options:
+      responses:
+        "200":
+          description: CORS response
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET,POST'"
+              method.response.header.Access-Control-Allow-Origin: "'${cors_allowed_origin}'"
+        passthroughBehavior: when_no_match
+    get:
+      summary: Get streaks
+      operationId: usersStreaksGet
+      security:
+        - CognitoAuthorizer: []
+      x-amazon-apigateway-request-validator: all
+      responses:
+        "200":
+          description: User streaks
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${users_streaks_get_invoke_arn}"
+    post:
+      summary: Upsert streaks
+      operationId: usersStreaksPost
+      security:
+        - CognitoAuthorizer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      x-amazon-apigateway-request-validator: all
+      responses:
+        "200":
+          description: Streak saved
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${users_streaks_post_invoke_arn}"
+
+  /users/{userId}/history:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    options:
+      responses:
+        "200":
+          description: CORS response
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET'"
+              method.response.header.Access-Control-Allow-Origin: "'${cors_allowed_origin}'"
+        passthroughBehavior: when_no_match
+    get:
+      summary: Get history
+      operationId: usersHistoryGet
+      security:
+        - CognitoAuthorizer: []
+      x-amazon-apigateway-request-validator: all
+      responses:
+        "200":
+          description: User history
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${users_history_get_invoke_arn}"

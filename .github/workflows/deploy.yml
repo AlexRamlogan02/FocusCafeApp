@@ -78,6 +78,13 @@ jobs:
             -backend-config="region=${{ inputs.aws_region }}" \
             -backend-config="dynamodb_table=${{ secrets.TF_STATE_LOCK_TABLE }}" \
             -backend-config="encrypt=true"
+
+      - name: Terraform fmt check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform validate
+        run: terraform validate
+
       - name: Terraform plan
         run: |
           EXTRA_VARS='${{ inputs.terraform_extra_vars }}'

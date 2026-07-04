@@ -1,0 +1,29 @@
+paths:
+  /app-data:
+    options:
+      responses:
+        "200":
+          description: CORS response
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET'"
+              method.response.header.Access-Control-Allow-Origin: "'${cors_allowed_origin}'"
+        passthroughBehavior: when_no_match
+    get:
+      summary: App data
+      operationId: appDataGet
+      x-amazon-apigateway-request-validator: all
+      responses:
+        "200":
+          description: App metadata
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: "${app_data_get_invoke_arn}"
