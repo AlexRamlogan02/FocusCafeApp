@@ -1,0 +1,72 @@
+name: Deploy PomoBrew to AWS
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      tf_module_paths:
+        required: true
+        type: string
+      project_name:
+        required: true
+        type: string
+      aws_region:
+        required: false
+        default: us-east-1
+        type: string
+      ui_directory:
+        required: true
+        type: string
+      force_deploy:
+        default: false
+        type: boolean
+      deploy_ui:
+        default: true
+        type: boolean
+      terraform_extra_vars:
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+
+jobs:
+  deploy_tf:
+    name: Deploy Terraform to ${{ inputs.environment }}
+    runs-on: ubuntu-22.04
+    environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.tf_module_paths }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - run: terraform init
+      - run: terraform plan -var="environment=${{ inputs.environment }}" -var="project_name=${{ inputs.project_name }}" -var="aws_region=${{ inputs.aws_region }}" ${{ inputs.terraform_extra_vars }}
+      - run: terraform apply -auto-approve -var="environment=${{ inputs.environment }}" -var="project_name=${{ inputs.project_name }}" -var="aws_region=${{ inputs.aws_region }}" ${{ inputs.terraform_extra_vars }}
+
+  deploy_ui:
+    name: Deploy UI to ${{ inputs.environment }}
+    needs: [deploy_tf]
+    if: inputs.deploy_ui == true
+    uses: ./.github/workflows/ui_deploy.yml
+    secrets: inherit
+    with:
+      environment: ${{ inputs.environment }}
+      working_directory: ${{ inputs.ui_directory }}
+      force_deploy: ${{ inputs.force_deploy }}
+      aws_region: ${{ inputs.aws_region }}

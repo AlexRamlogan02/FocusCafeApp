@@ -1,0 +1,68 @@
+name: UI Deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      working_directory:
+        required: true
+        type: string
+      force_deploy:
+        default: false
+        type: boolean
+      aws_region:
+        required: false
+        default: us-east-1
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build:
+    uses: ./.github/workflows/ui_build.yml
+    secrets: inherit
+    with:
+      environment: ${{ inputs.environment }}
+      working_directory: ${{ inputs.working_directory }}
+      force_deploy: ${{ inputs.force_deploy }}
+
+  deploy:
+    name: Deploy UI to ${{ inputs.environment }}
+    needs: [build]
+    if: needs.build.outputs.artifact_name != ''
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    environment: ${{ inputs.environment }}_deploy
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build.outputs.artifact_name }}
+          path: /tmp/artifact
+
+      - name: Extract artifact
+        run: |
+          mkdir -p /tmp/dist
+          tar xzvf /tmp/artifact/*.tar.gz -C /tmp/dist
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Sync to S3
+        run: aws s3 sync /tmp/dist/dist s3://${{ secrets.S3_BUCKET_NAME }} --delete
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"

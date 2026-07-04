@@ -1,0 +1,14 @@
+ui:
+  - "components/focus-cafe-app-ui/src/**"
+  - "components/focus-cafe-app-ui/public/**"
+  - "components/focus-cafe-app-ui/index.html"
+  - "components/focus-cafe-app-ui/vite.config.js"
+  - "!**/*.md"
+
+infrastructure:
+  - "components/focus-cafe-app-api/infrastructure/**"
+  - "components/focus-cafe-app-db/infrastructure/**"
+  - "components/focus-cafe-app-hosting/infrastructure/**"
+  - "!components/focus-cafe-app-api/infrastructure/**/*.md"
+  - "!components/focus-cafe-app-db/infrastructure/**/*.md"
+  - "!components/focus-cafe-app-hosting/infrastructure/**/*.md"

@@ -1,0 +1,72 @@
+name: UI Build
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      working_directory:
+        required: true
+        type: string
+      force_deploy:
+        default: false
+        type: boolean
+    outputs:
+      artifact_name:
+        value: ${{ jobs.build.outputs.artifact_name }}
+
+env:
+  NODE_VERSION: 20
+
+jobs:
+  build:
+    name: Build UI for ${{ inputs.environment }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    outputs:
+      artifact_name: ${{ steps.artifact.outputs.artifact_name }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: ${{ inputs.working_directory }}/package-lock.json
+
+      - run: npm ci
+
+      - name: Build (Vite)
+        run: npm run build
+        env:
+          VITE_ENV: ${{ inputs.environment }}
+
+      - name: Check if UI files changed
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: .github/path_filter.yml
+
+      - name: Package build artifact
+        id: artifact
+        if: inputs.force_deploy == true || steps.filter.outputs.ui == 'true'
+        run: |
+          runNumber="${{ github.run_number }}"
+          artifactName="focus-cafe-ui-${{ inputs.environment }}-run${runNumber}.tar.gz"
+          tar czvf "${{ runner.temp }}/${artifactName}" dist/
+          echo "artifact_name=${artifactName}" >> "$GITHUB_OUTPUT"
+          echo "artifact_path=${{ runner.temp }}/${artifactName}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload artifact
+        if: steps.artifact.outputs.artifact_path != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.artifact.outputs.artifact_name }}
+          path: ${{ steps.artifact.outputs.artifact_path }}
+          retention-days: 30
