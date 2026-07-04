@@ -38,7 +38,6 @@ jobs:
       aws_region: us-east-1
       ui_directory: components/focus-cafe-app-ui
       deploy_ui: false
-      terraform_extra_vars: -var=aws_account_id=${{ secrets.AWS_ACCOUNT_ID }}
 
   deploy_api_dev:
     name: Deploy API to dev
