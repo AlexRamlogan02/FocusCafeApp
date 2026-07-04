@@ -1,0 +1,65 @@
+name: PR Actions for PomoBrew 🍵
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+    branches: [master]
+    paths:
+      - "components/**"
+      - ".github/workflows/**"
+      - ".github/scripts/**"
+      - ".github/path_filter.yml"
+  push:
+    branches: [master]
+    paths:
+      - "components/**"
+      - ".github/workflows/**"
+      - ".github/scripts/**"
+      - ".github/path_filter.yml"
+
+concurrency:
+  group: pr-actions-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs: 
+  deploy_hosting_dev:
+    name: Deploy Hosting to dev
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      environment: dev
+      tf_module_paths: components/focus-cafe-app-hosting/infrastructure
+      project_name: pomobrew
+      aws_region: us-east-1
+      ui_directory: components/focus-cafe-app-ui
+      deploy_ui: false
+      terraform_extra_vars: -var=aws_account_id=${{ secrets.AWS_ACCOUNT_ID }}
+
+  deploy_api_dev:
+    name: Deploy API to dev
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      environment: dev
+      tf_module_paths: components/focus-cafe-app-api/infrastructure
+      project_name: pomobrew
+      aws_region: us-east-1
+      ui_directory: components/focus-cafe-app-ui
+      deploy_ui: true
+
+  deploy_db_dev:
+    name: Deploy DB to dev
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      environment: dev
+      tf_module_paths: components/focus-cafe-app-db/infrastructure
+      project_name: pomobrew
+      aws_region: us-east-1
+      ui_directory: components/focus-cafe-app-ui
+      deploy_ui: false
