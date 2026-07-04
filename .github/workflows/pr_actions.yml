@@ -9,6 +9,13 @@ on:
       - ".github/workflows/**"
       - ".github/scripts/**"
       - ".github/path_filter.yml"
+  push:
+    branches: [master]
+    paths:
+      - "components/**"
+      - ".github/workflows/**"
+      - ".github/scripts/**"
+      - ".github/path_filter.yml"
 
 concurrency:
   group: pr-actions-${{ github.event.pull_request.number }}
