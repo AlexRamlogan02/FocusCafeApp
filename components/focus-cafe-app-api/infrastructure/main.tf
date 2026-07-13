@@ -195,7 +195,7 @@ resource "aws_lambda_function" "endpoint_lambda" {
   function_name    = "${var.project_name}-${var.environment}-${each.key}"
   role             = aws_iam_role.endpoint_lambda[each.key].arn
   handler          = each.value.handler
-  runtime          = "nodejs20.x"
+  runtime          = "nodejs22.x"
   timeout          = each.value.timeout
   memory_size      = each.value.memory_size
   layers           = [for layer in module.lambda_layers : layer.layer_arn]

@@ -22,5 +22,5 @@ resource "aws_lambda_layer_version" "deps" {
   filename            = data.archive_file.layer.output_path
   source_code_hash    = data.archive_file.layer.output_base64sha256
   layer_name          = "${var.project_name}-${var.environment}-${var.layer_name_suffix}"
-  compatible_runtimes = ["nodejs20.x"]
+  compatible_runtimes = ["nodejs22.x"]
 }

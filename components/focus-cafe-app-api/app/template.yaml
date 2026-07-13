@@ -4,7 +4,7 @@ Description: Focus Cafe API local SAM template
 
 Globals:
   Function:
-    Runtime: nodejs20.x
+    Runtime: nodejs22.x
     Timeout: 15
     MemorySize: 256
 
@@ -38,7 +38,7 @@ Resources:
       LayerName: focus-cafe-local-shared-utils
       ContentUri: lambda_layer/shared_utils/
       CompatibleRuntimes:
-        - nodejs20.x
+        - nodejs22.x
 
   SharedLoggerLayer:
     Type: AWS::Serverless::LayerVersion
@@ -46,7 +46,7 @@ Resources:
       LayerName: focus-cafe-local-shared-logger
       ContentUri: lambda_layer/shared_logger/
       CompatibleRuntimes:
-        - nodejs20.x
+        - nodejs22.x
 
   SharedDynamoLayer:
     Type: AWS::Serverless::LayerVersion
@@ -54,4 +54,4 @@ Resources:
       LayerName: focus-cafe-local-shared-dynamo
       ContentUri: lambda_layer/shared_dynamo/
       CompatibleRuntimes:
-        - nodejs20.x
+        - nodejs22.x
