@@ -1,0 +1,13 @@
+{
+  "resource": "/app-data",
+  "path": "/app-data",
+  "httpMethod": "GET",
+  "headers": {
+    "origin": "http://localhost:5173"
+  },
+  "requestContext": {
+    "requestId": "local-test-request",
+    "resourcePath": "/app-data",
+    "httpMethod": "GET"
+  }
+}

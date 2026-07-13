@@ -1,0 +1,13 @@
+{
+  "name": "@focus-cafe/shared_dynamo",
+  "version": "1.0.0",
+  "description": "Shared DynamoDB helpers for Focus Cafe Lambda functions",
+  "main": "index.js",
+  "type": "commonjs",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1079.0",
+    "@aws-sdk/lib-dynamodb": "^3.1079.0",
+    "@aws-sdk/util-dynamodb": "^3.996.5"
+  }
+}
