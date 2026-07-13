@@ -9,10 +9,12 @@
         "iam:GetRole",
         "iam:ListRoles",
         "iam:GetPolicy",
+        "iam:GetPolicyVersion",
         "iam:ListPolicies",
         "iam:ListAttachedRolePolicies",
         "iam:ListRolePolicies",
         "iam:GetRolePolicy",
+        "iam:ListInstanceProfilesForRole",
         "iam:ListOpenIDConnectProviders",
         "iam:GetOpenIDConnectProvider"
       ],

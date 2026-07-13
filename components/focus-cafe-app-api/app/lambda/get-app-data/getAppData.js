@@ -23,7 +23,6 @@ exports.handler = async (event, context = undefined) => {
         headers: {
             "Access-Control-Allow-Methods": "GET, OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type,Authorization",
-            "Access-Control-Allow-Credentials": "true",
         }
     };
 

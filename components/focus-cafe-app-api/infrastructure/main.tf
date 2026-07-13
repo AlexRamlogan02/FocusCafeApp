@@ -213,7 +213,6 @@ locals {
                     "method.response.header.Access-Control-Allow-Headers"     = "'Content-Type,Authorization'"
                     "method.response.header.Access-Control-Allow-Methods"     = "'GET,POST,PUT,PATCH,DELETE,OPTIONS'"
                     "method.response.header.Access-Control-Allow-Origin"      = "'${length(var.cors_allowed_origins) == 0 ? "*" : var.cors_allowed_origins[0]}'"
-                    "method.response.header.Access-Control-Allow-Credentials" = "'true'"
                   }
                 }
               }
