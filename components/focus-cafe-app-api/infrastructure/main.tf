@@ -102,6 +102,32 @@ data "aws_iam_policy_document" "lambda_assume_role" {
   }
 }
 
+data "aws_iam_policy_document" "apigw_cloudwatch_assume_role" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["apigateway.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "apigw_cloudwatch" {
+  name               = "${var.project_name}-${var.environment}-apigw-cloudwatch-role"
+  assume_role_policy = data.aws_iam_policy_document.apigw_cloudwatch_assume_role.json
+}
+
+resource "aws_iam_role_policy_attachment" "apigw_cloudwatch" {
+  role       = aws_iam_role.apigw_cloudwatch.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+}
+
+resource "aws_api_gateway_account" "main" {
+  cloudwatch_role_arn = aws_iam_role.apigw_cloudwatch.arn
+}
+
 resource "aws_iam_role" "endpoint_lambda" {
   for_each = local.endpoint_registry
 
@@ -332,6 +358,8 @@ resource "aws_api_gateway_deployment" "main" {
 }
 
 resource "aws_api_gateway_stage" "main" {
+  depends_on = [aws_api_gateway_account.main]
+
   rest_api_id   = aws_api_gateway_rest_api.main.id
   deployment_id = aws_api_gateway_deployment.main.id
   stage_name    = var.environment
