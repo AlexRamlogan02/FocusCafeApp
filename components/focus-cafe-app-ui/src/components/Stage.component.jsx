@@ -8,11 +8,13 @@ export default function Stage({
 	numSessions,
 }) {
 	return (
-		<Timer
-			item={item}
-			focusDuration={focusDuration}
-			breakDuration={breakDuration}
-			numSessions={numSessions}
-		/>
+		<div>
+			<Timer
+				item={item}
+				focusDuration={focusDuration}
+				breakDuration={breakDuration}
+				numSessions={numSessions}
+			/>
+		</div>
 	)
 }
