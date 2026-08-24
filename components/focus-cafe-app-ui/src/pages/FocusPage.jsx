@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
-import Timer from '../components/Timer.component.jsx'
+import Stage from '../components/Stage.component.jsx'
 import TodoList from '../components/TodoList.jsx'
 
 export default function FocusPage({
@@ -25,8 +25,8 @@ export default function FocusPage({
     return (
         <div className="space-y-8">
             <section className="space-y-8">
-                <div className="rounded-3xl border border-[color:var(--secondary)]/20 bg-white p-6 shadow-lg dark:bg-slate-900/50">
-                    <Timer
+                <div className="rounded-3xl border border-[color:var(--secondary)]/20">
+                    <Stage
                         item={resolvedItem}
                         focusDuration={resolvedSettings.focusDuration}
                         breakDuration={resolvedSettings.breakDuration}

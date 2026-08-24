@@ -34,6 +34,7 @@ export default function Timer({
     const [isRunning, setIsRunning] = useState(false)
     const [loading, setLoading] = useState(true)
     const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+    const [isStarted, setIsStarted] = useState(sessionStorage.getItem('isStarted') === 'true')
 
     useEffect(() => {
         let mounted = true
@@ -85,7 +86,12 @@ export default function Timer({
 
     const handleStartPause = () => {
         if (timeLeft === null) return
-        setIsRunning((current) => !current)
+        setIsRunning((current) => {
+            const newIsRunning = !current
+            sessionStorage.setItem('isStarted', newIsRunning)
+            setIsStarted(newIsRunning)
+            return newIsRunning
+        })
     }
 
     const handleReset = () => {
@@ -95,6 +101,7 @@ export default function Timer({
         setPhase('focus')
         setTimeLeft(durations.focus)
         setIsRunning(false)
+        setIsStarted(false)
     }
 
     if (loading) {
@@ -114,7 +121,9 @@ export default function Timer({
                 
             </button>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--secondary)]">
-                {phase === 'break' ? 'Break' : 'Focus'} session
+                {
+                    isStarted ? (phase === 'focus' ? 'Focus Time' : 'Break Time') : 'You can do this!'
+                }
             </p>
             <h1 className="mt-3 text-7xl font-semibold tracking-tight text-[var(--text-color)] sm:text-8xl">
                 {formatTime(timeLeft)}

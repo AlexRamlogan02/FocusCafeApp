@@ -12,8 +12,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
-          <Route index element={<HomePage />} />
-          <Route path="menu" element={<MenuPage />} />
+          <Route index element={<MenuPage />} />
           <Route path="focus" element={<FocusPage />} />
         </Route>
       </Routes>
