@@ -72,3 +72,93 @@ paths:
               schema:
                 type: string
                 example: "Content-Type, Authorization"
+
+  /user-profile:
+    get:
+      summary: Get the authenticated user's profile
+      operationId: getUserProfile
+      x-endpoint-key: user_profile_get
+      x-lambda-dir: get-user-profile
+      x-handler: getUserProfile.handler
+      x-auth: COGNITO
+      x-timeout: 15
+      x-memory-size: 256
+      x-required-scopes: []
+      x-dynamodb-actions:
+        - dynamodb:GetItem
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+    put:
+      summary: Create or update the authenticated user's profile
+      operationId: putUserProfile
+      x-endpoint-key: user_profile_put
+      x-lambda-dir: put-user-profile
+      x-handler: putUserProfile.handler
+      x-auth: COGNITO
+      x-timeout: 15
+      x-memory-size: 256
+      x-required-scopes: []
+      x-dynamodb-actions:
+        - dynamodb:PutItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                displayName:
+                  type: string
+                preferences:
+                  type: object
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+    options:
+      summary: CORS preflight request
+      operationId: optionsUserProfile
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: '{"statusCode":200}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,PUT,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization'"
+      responses:
+        '200':
+          description: Successful response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+                example: "GET, PUT, OPTIONS"
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+                example: "Content-Type, Authorization"

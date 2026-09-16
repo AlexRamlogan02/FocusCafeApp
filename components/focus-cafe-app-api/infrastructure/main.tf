@@ -404,14 +404,18 @@ resource "aws_cognito_user_pool" "main" {
     require_symbols   = true
     require_uppercase = true
   }
+
+  lambda_config {
+    post_confirmation = aws_lambda_function.post_confirmation.arn
+  }
 }
 
 resource "aws_cognito_user_pool_client" "main" {
   name         = "${var.project_name}-${var.environment}-client"
   user_pool_id = aws_cognito_user_pool.main.id
 
-  access_token_validity  = 60
-  id_token_validity      = 60
+  access_token_validity  = 15
+  id_token_validity      = 15
   refresh_token_validity = 30
 
   token_validity_units {
@@ -424,6 +428,83 @@ resource "aws_cognito_user_pool_client" "main" {
     "ALLOW_USER_PASSWORD_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH"
   ]
+}
+
+data "archive_file" "post_confirmation" {
+  type        = "zip"
+  source_dir  = "${path.module}/../app/lambda/post-confirmation"
+  output_path = "${path.module}/.build/post_confirmation.zip"
+}
+
+resource "aws_iam_role" "post_confirmation" {
+  name               = "${var.project_name}-${var.environment}-post-confirmation-role"
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
+}
+
+data "aws_iam_policy_document" "post_confirmation" {
+  statement {
+    sid    = "CloudWatchLogs"
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:*"]
+  }
+
+  statement {
+    sid     = "DynamoWrite"
+    effect  = "Allow"
+    actions = ["dynamodb:PutItem"]
+    resources = [
+      "arn:aws:dynamodb:${var.aws_region}:${data.aws_caller_identity.current.account_id}:table/${local.dynamodb_table_name}"
+    ]
+  }
+}
+
+resource "aws_iam_policy" "post_confirmation" {
+  name   = "${var.project_name}-${var.environment}-post-confirmation-policy"
+  policy = data.aws_iam_policy_document.post_confirmation.json
+}
+
+resource "aws_iam_role_policy_attachment" "post_confirmation" {
+  role       = aws_iam_role.post_confirmation.name
+  policy_arn = aws_iam_policy.post_confirmation.arn
+}
+
+resource "aws_lambda_function" "post_confirmation" {
+  filename         = data.archive_file.post_confirmation.output_path
+  source_code_hash = data.archive_file.post_confirmation.output_base64sha256
+  function_name    = "${var.project_name}-${var.environment}-post-confirmation"
+  role             = aws_iam_role.post_confirmation.arn
+  handler          = "postConfirmation.handler"
+  runtime          = "nodejs22.x"
+  timeout          = 15
+  memory_size      = 256
+  layers           = [for layer in module.lambda_layers : layer.layer_arn]
+
+  environment {
+    variables = {
+      ENVIRONMENT         = var.environment
+      DYNAMODB_TABLE_NAME = local.dynamodb_table_name
+      SERVICE_NAME        = "post-confirmation"
+      METRICS_NAMESPACE   = "${var.project_name}-${var.environment}-api"
+    }
+  }
+}
+
+resource "aws_cloudwatch_log_group" "post_confirmation" {
+  name              = "/aws/lambda/${aws_lambda_function.post_confirmation.function_name}"
+  retention_in_days = 14
+}
+
+resource "aws_lambda_permission" "cognito_post_confirmation" {
+  statement_id  = "AllowExecutionFromCognito"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.post_confirmation.function_name
+  principal     = "cognito-idp.amazonaws.com"
+  source_arn    = aws_cognito_user_pool.main.arn
 }
 
 resource "aws_cloudwatch_log_group" "api_gateway_access" {
