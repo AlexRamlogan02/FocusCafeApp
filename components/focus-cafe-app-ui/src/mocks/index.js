@@ -1,0 +1,1 @@
+export { appDataMock } from './appData.mock.js'
