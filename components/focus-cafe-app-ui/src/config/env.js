@@ -1,5 +1,5 @@
-// Vite only exposes env vars prefixed with VITE_ to client code, so
-// `npm run local` (vite --mode local) loads VITE_ENV from .env.local.
-export const isLocalEnv = import.meta.env.VITE_ENV === 'local' || import.meta.env.MODE === 'local'
-
-export const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? ''
+// Vite only exposes env vars prefixed with VITE_ to client code. "local" can't be
+// used as a mode name (it conflicts with the .env.local override suffix), so
+// `npm run local` uses --mode mock, and .env.local (loaded for every mode) sets VITE_ENV.
+export const isLocalEnv = import.meta.env.VITE_ENV === 'local' || import.meta.env.MODE === 'mock'
+export const apiBaseUrl = import.meta.env.VITE_APP_BASE_URI ?? ''

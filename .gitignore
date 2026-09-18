@@ -40,3 +40,4 @@ components/focus-cafe-app-api/infrastructure/lambda.zip
 *.njsproj
 *.sln
 *.sw?
+*CHECKLIST.md
